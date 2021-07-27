@@ -14,7 +14,11 @@ To clean the build files use the following command:
 
 ## Running
 
-Verify the file checksum before blindly using it (SHA256): `92F811215DAAD0B286055ACC2DD2F0065416A5C24BE37868BCF4530EA1925A63`
+Verify the file checksum before blindly using it.
+
+| File | Algorithm | Hash |
+| ---- | --------- | ---- |
+| .\builds\DECU_Fix.exe | SHA256 | `92F811215DAAD0B286055ACC2DD2F0065416A5C24BE37868BCF4530EA1925A63` |
 
 When running the C# executable ensure that you add executable permissions (Linux):
 
