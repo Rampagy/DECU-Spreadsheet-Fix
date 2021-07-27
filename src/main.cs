@@ -75,36 +75,50 @@ namespace SpreadsheetFixer
                 string extension = path.Split('.')[path.Split('.').Length - 1];
                 string new_path = path.Insert( path.Length - extension.Length - 1, "_Fixed" );
                 int creditColumn = -1;
+                int headerCount = 0;
                 bool firstPass = true;
 
                 using ( var reader = new System.IO.StreamReader( path ) )
                 {
                     using ( var writer = new System.IO.StreamWriter( new_path ) )
                     {
-                        if (firstPass)
+                        if ( firstPass )
                         {
                             string header_line = reader.ReadLine();
                             firstPass = false;
 
                             // look through the columns and find the "Credit or Debit" column
-                            int count = 0;
                             foreach ( string column in header_line.Split(',') )
                             {
-                                if (column.ToUpper() == "\"CREDIT OR DEBIT\"")
+                                if ( column.ToUpper() == "\"CREDIT OR DEBIT\"" )
                                 {
-                                    creditColumn = count;
-                                    break;
+                                    creditColumn = headerCount;
                                 }
-                                count++;
+                                headerCount++;
                             }
 
-                            Console.WriteLine( creditColumn );
-                            writer.WriteLine( header_line );
+                            writer.WriteLine( header_line + ",\"True Amount\"" );
                         }
 
                         while ( !reader.EndOfStream )
                         {
-                            writer.WriteLine( reader.ReadLine() );
+                            string newColumn  = "";
+                            string data_line = reader.ReadLine();
+                            string[] data_line_split = data_line.Split(',');
+                            int creditIdx = data_line_split.Length - 2;
+                            int amountIdx = data_line_split.Length - 1;
+
+                            if ( data_line_split[creditIdx].ToUpper() == "\"DEBIT\"" )
+                            {
+                                newColumn = (double.Parse(data_line_split[amountIdx]) * -1)
+                                                .ToString("F", System.Globalization.CultureInfo.CreateSpecificCulture("en-US"));
+                            }
+                            else
+                            {
+                                newColumn = data_line_split[amountIdx];
+                            }
+
+                            writer.WriteLine( data_line + "," + newColumn );
                         }
                     }
                 }
