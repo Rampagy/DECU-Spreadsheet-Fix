@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 
+
 namespace SpreadsheetFixer
 {
     public partial class main
@@ -73,15 +74,34 @@ namespace SpreadsheetFixer
                 // create name of transcribed file
                 string extension = path.Split('.')[path.Split('.').Length - 1];
                 string new_path = path.Insert( path.Length - extension.Length - 1, "_Fixed" );
-
-                Console.WriteLine(path);
-                Console.WriteLine(new_path);
-                Console.WriteLine();
+                int creditColumn = -1;
+                bool firstPass = true;
 
                 using ( var reader = new System.IO.StreamReader( path ) )
                 {
                     using ( var writer = new System.IO.StreamWriter( new_path ) )
                     {
+                        if (firstPass)
+                        {
+                            string header_line = reader.ReadLine();
+                            firstPass = false;
+
+                            // look through the columns and find the "Credit or Debit" column
+                            int count = 0;
+                            foreach ( string column in header_line.Split(',') )
+                            {
+                                if (column.ToUpper() == "\"CREDIT OR DEBIT\"")
+                                {
+                                    creditColumn = count;
+                                    break;
+                                }
+                                count++;
+                            }
+
+                            Console.WriteLine( creditColumn );
+                            writer.WriteLine( header_line );
+                        }
+
                         while ( !reader.EndOfStream )
                         {
                             writer.WriteLine( reader.ReadLine() );
