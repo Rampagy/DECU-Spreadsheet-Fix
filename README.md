@@ -12,14 +12,14 @@ To clean the build files use the following command:
 
     scons -c
 
-Please verify the file checksum before blindly using it (SHA256):
-
 ## Running
+
+Verify the file checksum before blindly using it (SHA256): `92F811215DAAD0B286055ACC2DD2F0065416A5C24BE37868BCF4530EA1925A63`
 
 When running the C# executable ensure that you add executable permissions (Linux):
 
-    chmod +x builds/astar_search.exe
+    chmod +x builds/DECU_Fix.exe
 
 Then to run the executable:
 
-    ./builds/astar_search.exe
+    ./builds/DECU_Fix.exe .\path\to\files.csv .\path\to\dirs\that\contain\csv\files\
